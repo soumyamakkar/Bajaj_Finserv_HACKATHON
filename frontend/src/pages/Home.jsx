@@ -10,11 +10,11 @@ const Home = () => {
   
   // aos initialization
   Aos.init({
-    duration:2500,
+    duration:500,
     delay:400
   })
   return (
-    <div className="max-w-[1440px] mx-auto bg-page overflow-hidden relative">
+    <div className="mx-auto bg-page overflow-hidden relative">
       <Header />
       <Banner />
       <About />
