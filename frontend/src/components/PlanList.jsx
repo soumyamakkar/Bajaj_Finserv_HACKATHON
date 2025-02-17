@@ -41,7 +41,7 @@ const PlanList = ({ plans }) => {
                   <div className="text-[40px] lg:text-[50px] font-primary font-extrabold text-center flex flex-col items-center justify-center">
                     <div className="leading-none">
                       <span className="tracking-[0.1px]">{price}</span>
-                      <span className="text-sm font-medium">$</span>
+                      <span className="text-sm font-medium">₹</span>
                     </div>
                     <span>/month</span>
                   </div>

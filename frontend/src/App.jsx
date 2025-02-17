@@ -7,6 +7,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import TwoFactor from "./pages/two-factor";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./components/Profile";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/two-factor" element={<TwoFactor/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
+        <Route path = "/profile" element = {<Profile/>}/>
       </Routes>
     </Router>
   );

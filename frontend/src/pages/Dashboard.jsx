@@ -126,33 +126,33 @@ const Dashboard = () => {
           Dashboard
         </h2>
         <nav className="flex flex-col flex-1">
-          {/* Center the icons */}
-          <ul className="space-y-4 flex-1 flex flex-col justify-center">
+            <ul className="space-y-4 flex-1 flex flex-col justify-center">
             {[
               { name: "Profile", icon: <FaUser /> },
               { name: "Settings", icon: <FaCog /> },
               { name: "See Past Reps", icon: <FaHistory /> },
             ].map((item, index) => (
-              <li key={index}>
+              <li key={index} className="rounded-md hover:bg-[#4AE290] transition">
                 <button
-                  className="w-full text-left py-2 px-4 rounded-md hover:bg-[#4AE290] transition flex items-center"
+                  className="w-full text-left py-2 px-4 flex items-center justify-center"
                   onClick={() => navigate(`/${item.name.toLowerCase().replace(/\s+/g, "-")}`)}
                 >
-                  <span className="mr-2">{item.icon}</span>
+                  <span>{item.icon}</span>
                   {isSidebarExpanded && item.name}
                 </button>
               </li>
             ))}
           </ul>
 
+
           {/* Logout at the bottom */}
           <button
-          className="w-full text-left py-2 px-4 rounded-md hover:bg-[#4AE290] transition flex items-center mt-auto"
+          className="w-full text-left py-2 px-4 rounded hover:bg-[#4AE290] transition flex items-center mt-auto justify-center"
             onClick={() => {
                 localStorage.clear();
                 navigate("/");
             }}>
-            <span className="mr-2"><FaSignOutAlt /></span>
+            <span><FaSignOutAlt /></span>
             {isSidebarExpanded && "Logout"}
         </button>
         </nav>
