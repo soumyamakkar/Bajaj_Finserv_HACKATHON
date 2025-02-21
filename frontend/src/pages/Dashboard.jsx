@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { saveExercise, fetchPastExercises } from "../api"; // Import API functions
-import { FaBars, FaUser, FaCog, FaHistory, FaSignOutAlt } from "react-icons/fa"; // Import icons
-
+import { saveExercise, fetchPastExercises } from "../api"; 
+import { FaBars, FaUser, FaCog, FaHistory, FaSignOutAlt } from "react-icons/fa"; 
+import ExerciseChart from "../components/Chart"; 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [exerciseCount, setExerciseCount] = useState({
@@ -219,6 +219,10 @@ const Dashboard = () => {
               <p className="text-gray-400">No past records found.</p>
             )}
           </div>
+        </div>
+        <div className="mt-8 bg-gray-900 p-6 rounded-lg shadow-md">
+          <h3 className="text-xl font-semibold mb-4 text-white">Exercise Progress Chart</h3>
+          <ExerciseChart pastExercises={pastExercises} />
         </div>
       </div>
     </div>
