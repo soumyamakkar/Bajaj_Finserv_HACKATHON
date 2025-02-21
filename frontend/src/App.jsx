@@ -8,7 +8,8 @@ import Login from "./pages/Login";
 import TwoFactor from "./pages/two-factor";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./components/Profile";
-
+// import Premium from "./components/Premium";
+import BicepCurlCounter from "./components/curl";
 const App = () => {
   return (
     <Router>
@@ -19,6 +20,8 @@ const App = () => {
         <Route path="/two-factor" element={<TwoFactor/>}/>
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path = "/profile" element = {<Profile/>}/>
+        {/* <Route path = "/premium-plan" element={<Premium/>}/> */}
+        <Route path = "/bicep-curl-counter" element={<BicepCurlCounter/>}/>
       </Routes>
     </Router>
   );

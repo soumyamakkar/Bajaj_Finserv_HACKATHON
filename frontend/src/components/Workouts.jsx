@@ -12,7 +12,7 @@ const Workouts = () => {
 
   const {icon,title} = workouts
   return (
-    <section className="section">
+    <section className="section" id="workouts">
       {/* section title */}
       <div
         className="section-title-group max-w-[540px] mx-auto px-4 lg:px-0"

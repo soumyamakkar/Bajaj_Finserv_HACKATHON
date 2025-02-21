@@ -8,7 +8,7 @@ import {} from "react-icons"
 const Faq = () => {
 
   const {accordions,icon,title} = faq
-  return <section className="section pt-[480px] lg:pt-[280px]">
+  return <section className="section pt-[480px] lg:pt-[280px]" id="faq">
   <div className="max-w-[768px] mx-auto lg:bg-faq bg-no-repeat bg-custom bg-center lg:h-[1160px] lg:pt-6" data-aos="fade-up"
     data-aos-offset = "300"
     data-aos-delay="200">

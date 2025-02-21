@@ -6,7 +6,7 @@ import {CommunitySlider}from "./index"
 const Community = () => {
   const {icon,title} = community
   return (
-    <section className="section relative">
+    <section className="section relative" id="community">
       <div className="container mx-auto">
         <div className="flex">
           {/* section title */}

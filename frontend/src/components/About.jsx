@@ -1,17 +1,14 @@
 import React from "react";
 
-// import data
 import { about } from "../data";
-
-// import icon
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 
 const About = () => {
   const { icon, link, subtitle1, subtitle2, title } = about;
   return (
-    <section className="py-[80px] md:py-[110px] lg:pt-[140px] lg:pb-[180px]">
+    <section className="py-[80px] md:py-[110px] lg:pt-[140px] lg:pb-[180px]" id="about">
       <div className="container mx-auto px-[20px] lg:px-[135px]">
-        {/* title */}
+        
         <div
           className="section-title-group justify-start"
           data-aos="fade-up"
@@ -23,7 +20,7 @@ const About = () => {
             <span className="text-primary-200">.</span>
           </h2>
         </div>
-        {/* subTitle1 */}
+    
         <p
           className="md:text-body-md mb-12"
           data-aos="fade-up"
@@ -31,7 +28,7 @@ const About = () => {
         >
           {subtitle1}
         </p>
-        {/* subTitle1 */}
+       
         <p
           className="md:text-body-md mb-8"
           data-aos="fade-up"
@@ -41,7 +38,7 @@ const About = () => {
         </p>
         <div>
           <a
-            href=""
+            href="razorpay.com"
             className="link flex items-center gap-x-2 hover:gap-x-4 transition-all"
             data-aos="fade-down"
             data-aos-dely="500"
