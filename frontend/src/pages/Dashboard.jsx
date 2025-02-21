@@ -126,7 +126,7 @@ const Dashboard = () => {
           Dashboard
         </h2>
         <nav className="flex flex-col flex-1">
-            <ul className="space-y-4 flex-1 flex flex-col justify-center">
+            <ul className="mt-10 space-y-4 flex-1 flex flex-col">
             {[
               { name: "Profile", icon: <FaUser /> },
               { name: "Settings", icon: <FaCog /> },
