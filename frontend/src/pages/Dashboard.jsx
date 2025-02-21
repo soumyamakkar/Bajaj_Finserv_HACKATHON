@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { saveExercise, fetchPastExercises } from "../api"; 
-import { FaBars, FaUser, FaCog, FaHistory, FaSignOutAlt } from "react-icons/fa"; 
+import { saveExercise, fetchPastExercises } from "../api"; // Import API functions
+import { FaBars, FaUser, FaCog, FaHistory, FaSignOutAlt, FaFire, FaTrophy } from "react-icons/fa"; // Import icons
+import io from 'socket.io-client';
 import ExerciseChart from "../components/Chart"; 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -16,6 +17,16 @@ const Dashboard = () => {
   const [intervalId, setIntervalId] = useState(null);
   const [name, setName] = useState("Athlete");
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false); // State for sidebar expansion
+  const [isDetecting, setIsDetecting] = useState(false);
+  const [squatCount, setSquatCount] = useState(0);
+  const webcamRef = useRef(null);
+  const requestRef = useRef(null);
+  const [stage, setStage] = useState("stand");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const canvasRef = useRef(null);
+  const [socket, setSocket] = useState(null);
+  const [streak, setStreak] = useState(1);
 
   // Load name from localStorage
   useEffect(() => {
@@ -33,100 +44,169 @@ const Dashboard = () => {
     }
   }, []);
 
-  const fetchExerciseCount = async (exercise) => {
-    try {
-      console.log(`Fetching latest ${exercise} count...`);
-      const response = await axios.get(`http://127.0.0.1:5000/last-session`);
-      console.log(`API Response:`, response.data);
+  // Initialize Socket.IO connection
+  useEffect(() => {
+    const newSocket = io('http://localhost:5000');
+    setSocket(newSocket);
 
-      // Adjust key access to match API structure
-      const apiKey = `last_squat_session`;
-      console.log("api key data: ",response.data[apiKey]); // Example: "last_squat_session"
-      if (response.data[apiKey] !== undefined) {
-        const newCount = response.data[apiKey];
-        console.log("new count: ",newCount);
+    newSocket.on('connect', () => {
+      console.log('Connected to server');
+    });
 
-        // Update state and localStorage
-        setExerciseCount((prev) => {
-          const updatedCount = { ...prev, [exercise]: newCount };
-          localStorage.setItem("exerciseCount", JSON.stringify(updatedCount));
-          return updatedCount;
-        });
-      } else {
-        console.log(`No new data for ${exercise}, state remains:`, exerciseCount);
-      }
-    } catch (error) {
-      console.error(`Error fetching ${exercise} count:`, error);
-    }
-  };
+    newSocket.on('count_update', (data) => {
+      console.log('Received count update:', data);
+      setSquatCount(data.count);
+      setStage(data.stage);
+      setExerciseCount(prev => ({
+        ...prev,
+        squats: data.count
+      }));
+    });
+
+    return () => newSocket.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const storedStreak = localStorage.getItem("exerciseStreak") || 1;
+    setStreak(Number(storedStreak));
+  }, []);
+
+  const [activeExercise, setActiveExercise] = useState(null);
 
   const handleStartExercise = async (exercise) => {
     try {
-      console.log(`Starting ${exercise} detection...`);
-      await axios.get(`http://127.0.0.1:5000/start-counting`);
+      setError(null);
+      setIsLoading(true);
+      await axios.get('http://localhost:5000/start-counting');
+      setIsDetecting(true);
+      setActiveExercise(exercise);
+      
+      // Reset the count for the specific exercise
+      setExerciseCount(prev => ({
+        ...prev,
+        [exercise]: 0
+      }));
 
-      console.log(`Started polling for ${exercise} count every 5 seconds...`);
-      const id = setInterval(() => {
-        console.log(`Polling ${exercise} count...`);
-        fetchExerciseCount(exercise);
-      }, 5000);
+      // Reset squat-specific states if needed
+      if (exercise === 'squats') {
+        setSquatCount(0);
+        setStage("stand");
+      }
 
-      setIntervalId(id);
-    } catch (error) {
-      console.error(`Error starting ${exercise} detection:`, error);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+
+    } catch (err) {
+      console.error(`Error starting ${exercise}:`, err);
+      setError('Failed to start exercise detection');
+      setIsLoading(false);
+      setIsDetecting(false);
+      setActiveExercise(null);
     }
   };
 
   const handleCloseSession = async (exercise) => {
-    console.log(`Closing ${exercise} session...`);
-
-    if (intervalId) {
-      clearInterval(intervalId);
-      setIntervalId(null);
-      console.log(`Stopped polling Flask API for ${exercise}.`);
-    }
-
-    const email = localStorage.getItem("email");
-    const count = exerciseCount[exercise]; // Use state directly instead of localStorage
-
-    if (!email) {
-      console.error("No user email found in localStorage.");
-      return;
-    }
-
     try {
+      setIsDetecting(false);
+      setActiveExercise(null);
+      const email = localStorage.getItem("email");
+      const count = exerciseCount[exercise];
+
+      if (!email) {
+        console.error("No user email found in localStorage.");
+        return;
+      }
+
       await saveExercise(email, exercise, count);
-      await axios.get(`http://127.0.0.1:5000/stop-counting`);
-      console.log(`${exercise} session closed.`);
+      await axios.get('http://localhost:5000/stop-counting');
     } catch (error) {
       console.error(`Error closing ${exercise} session:`, error);
+      setError(`Failed to close ${exercise} session`);
     }
   };
 
-  useEffect(() => {
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-        console.log("Cleared interval on unmount.");
-      }
-    };
-  }, [intervalId]);
+  const VideoFeedSection = () => (
+    <div className="mb-8 w-full max-w-2xl mx-auto">
+      <div className="relative" style={{ paddingTop: '56.25%' }}>
+        {isDetecting && (
+          <img
+            src="http://localhost:5000/video_feed"
+            alt="Exercise Video Feed"
+            className="absolute top-0 left-0 w-full h-full object-contain rounded-lg"
+            style={{
+              transform: 'scaleX(-1)',
+              maxWidth: '100%',
+              maxHeight: '100%'
+            }}
+            onError={(e) => {
+              console.error('Video feed error:', e);
+              setError('Failed to load video feed');
+            }}
+          />
+        )}
+        {isDetecting && activeExercise && (
+          <div className="absolute top-4 left-4 bg-black bg-opacity-50 p-2 rounded" style={{ zIndex: 2 }}>
+            <p className="text-white text-xl">
+              {activeExercise.charAt(0).toUpperCase() + activeExercise.slice(1)}: {exerciseCount[activeExercise]}
+            </p>
+            {activeExercise === 'squats' && (
+              <p className="text-white text-sm">Stage: {stage}</p>
+            )}
+            {activeExercise === 'pushups' && (
+              <p className="text-white text-sm">Keep your back straight!</p>
+            )}
+            {activeExercise === 'pullups' && (
+              <p className="text-white text-sm">Full range of motion!</p>
+            )}
+            {activeExercise === 'crunches' && (
+              <p className="text-white text-sm">Engage your core!</p>
+            )}
+          </div>
+        )}
+        {isLoading && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" style={{ zIndex: 2 }}>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#4AE290]"></div>
+          </div>
+        )}
+        {error && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-red-500" style={{ zIndex: 2 }}>
+            {error}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const StreakDisplay = () => (
+    <div className="absolute top-4 right-4 flex gap-4">
+      <button 
+        onClick={() => navigate('/leaderboard')} 
+        className="flex items-center bg-gray-800 rounded-full px-4 py-2 shadow-lg hover:bg-gray-700 transition-colors"
+      >
+        <FaTrophy className="text-yellow-500 text-xl mr-2" />
+        <span className="text-white font-bold">Leaderboard</span>
+      </button>
+      <div className="flex items-center bg-gray-800 rounded-full px-4 py-2 shadow-lg">
+        <FaFire className="text-orange-500 text-xl mr-2" />
+        <span className="text-white font-bold">{streak} days</span>
+      </div>
+    </div>
+  );
 
   return (
     <div className="flex min-h-screen bg-black text-white">
       {/* Sidebar */}
       <div
-        className={`${
-          isSidebarExpanded ? "w-64" : "w-20"
-        } bg-gradient-to-b from-gray-800 to-gray-900 p-6 flex flex-col transition-all duration-300 ease-in-out`}
+        className={`${isSidebarExpanded ? "w-64" : "w-20"
+          } bg-gradient-to-b from-gray-800 to-gray-900 p-6 flex flex-col transition-all duration-300 ease-in-out`}
       >
-        <h2 className={`text-2xl text-center mb-6 font-semibold text-white ${
-          !isSidebarExpanded && "hidden"
-        }`}>
+        <h2 className={`text-2xl text-center mb-6 font-semibold text-white ${!isSidebarExpanded && "hidden"
+          }`}>
           Dashboard
         </h2>
         <nav className="flex flex-col flex-1">
-            <ul className="mt-10 space-y-4 flex-1 flex flex-col">
+          <ul className="space-y-4 flex-1 flex flex-col justify-center">
             {[
               { name: "Profile", icon: <FaUser /> },
               { name: "Settings", icon: <FaCog /> },
@@ -147,19 +227,21 @@ const Dashboard = () => {
 
           {/* Logout at the bottom */}
           <button
-          className="w-full text-left py-2 px-4 rounded hover:bg-[#4AE290] transition flex items-center mt-auto justify-center"
+            className="w-full text-left py-2 px-4 rounded hover:bg-[#4AE290] transition flex items-center mt-auto justify-center"
             onClick={() => {
-                localStorage.clear();
-                navigate("/");
+              localStorage.clear();
+              navigate("/");
             }}>
             <span><FaSignOutAlt /></span>
             {isSidebarExpanded && "Logout"}
-        </button>
+          </button>
         </nav>
       </div>
 
       {/* Main Content */}
       <div className="flex-1 p-8">
+        <StreakDisplay />
+        
         {/* Hamburger Icon */}
         <button
           className="text-white text-2xl mb-6 focus:outline-none"
@@ -169,8 +251,11 @@ const Dashboard = () => {
         </button>
 
         <h1 className="text-2xl font-semibold mb-6 text-white">
-          Back for more, <span className="text-[#4AE290]">{name}</span>? Let’s smash those reps! 💪
+          Back for more, <span className="text-[#4AE290]">{name}</span>? Let's smash those reps! 💪
         </h1>
+
+        {/* Add Video Feed Section */}
+        <VideoFeedSection />
 
         {/* Exercise Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -213,6 +298,11 @@ const Dashboard = () => {
                     {exercise.exerciseType.charAt(0).toUpperCase() + exercise.exerciseType.slice(1)}
                   </h4>
                   <p className="text-2xl font-bold">{exercise.count}</p>
+                  <p className="text-sm font-bold">
+                    Time: {exercise.date ? new Date(exercise.date).toLocaleString("en-US", { 
+                      month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" 
+                    }) : "No date"}
+                  </p>
                 </div>
               ))
             ) : (

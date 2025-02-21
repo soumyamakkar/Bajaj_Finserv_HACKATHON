@@ -79,12 +79,12 @@ export const verify2FA = async (email, code) => {
   }
 };
 
-export const saveExercise = async (email, exerciseType, count) => {
+export const saveExercise = async (email, exerciseType, count, date) => {
     try {
-        console.log("Sending data:", { email, exerciseType, count }); // ✅ Debug
+        console.log("Sending data:", { email, exerciseType, count, date }); // ✅ Debug
 
         const response = await axios.post(`${API_URL}/session/exercise`, 
-            { email, exerciseType, count }, // ✅ Fix: Ensure correct structure
+            { email, exerciseType, count, date }, // ✅ Fix: Ensure correct structure
             {
                 headers: { "Content-Type": "application/json" }
             }
@@ -103,5 +103,16 @@ export const fetchPastExercises = async (email) => {
     } catch (error) {
       console.error("Error fetching past exercises:", error);
       return [];
+    }
+  };
+
+
+  export const getLeaderboard = async (date) => {
+    try {
+      const response = await axios.get(`${API_URL}/session/leaderboard?date=${date}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching leaderboard:", error);
+      return null;
     }
   };
