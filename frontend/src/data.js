@@ -12,13 +12,12 @@ import CommunityImg2 from './assets/img/community/img2.png';
 import CommunityImg3 from './assets/img/community/img3.png';
 import CommunityImg4 from './assets/img/community/img4.png';
 import JoinImg from './assets/img/join/woman.png';
-
 // icons
 import UsersIcn from './assets/img/about/icons/users-icn.svg';
+import CalendarIcn from './assets/img/workouts/icons/calendar.svg';
 import PriceIcn from './assets/img/pricing/icons/price.svg';
 import CommunityIcn from './assets/img/community/icons/community-icn.svg';
 import QuestionMarkIcn from './assets/img/faq/icons/question-mark.svg';
-
 
 export const header = {
   logo: Logo,
@@ -39,22 +38,23 @@ export const banner = {
   titlePart1: 'Get the best part of your day',
   titlePart2: '– you fit here.',
   subtitle:
-    'We provide serious fitness but within a fun and friendly, safe space. Experience AI-powered home workouts with real-time rep counting!',
+    'We provide serious fitness but within a fun and friendly, safe space.',
   textBtn: 'Join Now',
   img: '',
 };
 
 export const about = {
   icon: UsersIcn,
-  title: 'Our mission',
+  title: 'Our misson',
   subtitle1:
     'We are distinguished by our unsurpassed motivating atmosphere, knowledgeable staff, and premier exercise equipment, which supports our members in meeting their individual fitness goals.',
   subtitle2:
-    'The strength of our heart-felt identity is utilized to inspire every person that steps foot into our gyms or joins our AI-powered home workout programs to better themselves.',
+    'The strength of our heart-felt identity is utilized to inspire every person that steps foot into our gyms to better themselves.',
   link: 'Join Now',
 };
 
 export const workouts = {
+  icon: CalendarIcn,
   title: 'Training programs',
   programs: [
     {
@@ -99,7 +99,6 @@ export const pricing = {
         { name: 'unlimited gym access' },
         { name: '1 training programs' },
         { name: 'free fitness consultation' },
-        { name: 'access to AI home workout (basic)' }, // Added AI feature
       ],
       delay: 600,
     },
@@ -111,7 +110,6 @@ export const pricing = {
         { name: '5 training programs' },
         { name: 'free fitness consultation' },
         { name: 'personal trainer' },
-        { name: 'access to AI home workout (premium)' }, // Added AI feature
       ],
       delay: 800,
     },
@@ -124,7 +122,6 @@ export const pricing = {
         { name: 'free fitness consultation' },
         { name: 'personal trainer' },
         { name: '50% off drinks' },
-        { name: 'full access to AI home workout' }, // Added AI feature
       ],
       delay: 1000,
     },
@@ -157,7 +154,7 @@ export const community = {
       image: CommunityImg4,
       name: 'Anne R.',
       message:
-        '“The AI home workout system is a game-changer! It’s like having a personal trainer at home.”', // Updated testimonial
+        '“Love these workouts! Trainers are knowledgeable and motivating. Gymme is wonderful!”',
     },
   ],
 };
@@ -169,37 +166,32 @@ export const faq = {
     {
       question: 'How can I book a workout class?',
       answer:
-        'You can book a workout class by visiting our website or by using our mobile app. You can also book a class by calling our gym directly.',
+        'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Molestiae temporibus beatae, totam repudiandae nam recusandae ea dolores tempora maxime.',
     },
     {
       question: 'Can I pay by cash for my membership?',
       answer:
-        'Yes, you can pay by cash for your membership. We also accept credit cards and UPI.',
+        'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Molestiae temporibus beatae, totam repudiandae nam recusandae ea dolores tempora maxime.',
     },
     {
       question: 'What age do I need to be to join?',
       answer:
-        'You need to be at least 18 years old to join our gym. If you are under 18, you will need to have a parent or guardian sign a waiver for you.',
+        'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Molestiae temporibus beatae, totam repudiandae nam recusandae ea dolores tempora maxime.',
     },
     {
       question: 'Are there any lockers?',
       answer:
-        'Yes, we have lockers available for our members to use.',
+        'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Molestiae temporibus beatae, totam repudiandae nam recusandae ea dolores tempora maxime.',
     },
     {
       question: 'How do I cancel my membership?',
       answer:
-        'You can cancel your membership by visiting our website or by calling our gym directly.',
+        'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Molestiae temporibus beatae, totam repudiandae nam recusandae ea dolores tempora maxime.',
     },
     {
       question: 'Is there water available at the gym?',
       answer:
-        'Yes, we have water fountains available for our members to use. We also have water bottles available for purchase.',
-    },
-    {
-      question: 'How does the AI home workout system work?', // New FAQ
-      answer:
-        'Our AI home workout system uses advanced computer vision to track your movements and count your reps in real-time. It provides feedback and guidance to help you perform exercises correctly.',
+        'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Molestiae temporibus beatae, totam repudiandae nam recusandae ea dolores tempora maxime.',
     },
   ],
 };
@@ -208,11 +200,11 @@ export const join = {
   image: JoinImg,
   title: 'Wanna join & have fun?',
   subtitle:
-    'Join our online workout classes and get in the best shape of your life! Experience the future of fitness with our AI-powered home workouts.',
+    'We’ll keep you updated on the things you need to know about Gymme. Nothing more, nothing less.',
   btnText: 'Join now',
 };
 
 export const footer = {
   logo: Logo,
-  copyrightText: 'All rights reserved. Gymme 2025.',
+  copyrightText: 'All rights reserved. Gymme 2022.',
 };
