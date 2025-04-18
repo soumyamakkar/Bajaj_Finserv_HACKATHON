@@ -92,6 +92,22 @@ const Dashboard = () => {
         setSquatCount(0);
         setStage("stand");
       }
+      if (exercise === 'pushups') {
+        setSquatCount(0);
+        setStage("stand");
+      }
+      if (exercise === 'bicepcurl') {
+        setSquatCount(0);
+        setStage("stand");
+      }
+      if (exercise === 'crunches') {
+        setSquatCount(0);
+        setStage("stand");
+      }
+      if (exercise === 'pullups') {
+        setSquatCount(0);
+        setStage("stand");
+      }
 
       setTimeout(() => {
         setIsLoading(false);
@@ -160,6 +176,9 @@ const Dashboard = () => {
               <p className="text-white text-sm">Full range of motion!</p>
             )}
             {activeExercise === 'crunches' && (
+              <p className="text-white text-sm">Engage your core!</p>
+            )}
+            {activeExercise === 'bicepcurls' && (
               <p className="text-white text-sm">Engage your core!</p>
             )}
           </div>
